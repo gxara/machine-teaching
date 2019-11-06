@@ -57,7 +57,7 @@ function evaluate(args, expected_results){
 // get a reference to your pre element for output
 // configure the output function
 // call Sk.importMainWithBody()
-function runit(args, func, expected_results) {
+function runit(args, func, expected_results, postprocessing) {
 
    // Display result divs
    document.getElementById("output-div").style.display="block";
@@ -75,12 +75,18 @@ function runit(args, func, expected_results) {
 
    // Extract data type from JSON 
    console.log(args);
+   console.log(postprocessing)
 
    for (i = 0; i < args.length; i++) {
        item = args[i];
        console.log(item);
        //prog_args = prog + "\nprint(" + func + "(*" + JSON.stringify(item) + "))";
-       prog_args = prog + "\nprint(" + func + "(*" + item + "))";
+       console.log(prog)
+       prog_args = prog + "\nanswer = " + func + "(*" + item + ")\n" + postprocessing +
+        `
+
+answer = postprocessing(answer)
+print(answer)`;
        console.log(prog_args);
        var myPromise = Sk.misceval.asyncToPromise(function() {
            return Sk.importMainWithBody("<stdin>", false, prog_args, true);

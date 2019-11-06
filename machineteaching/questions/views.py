@@ -84,6 +84,16 @@ def signup(request):
 def show_problem(request, problem_id):
     #try:
     context = get_problem(problem_id)
+    if problem_id == 801:
+        postprocessing = """
+def postprocessing(answer):\n\treturn sorted([sorted(x) for x in answer])
+"""
+    else:
+        postprocessing = """
+def postprocessing(answer):
+    return answer
+"""
+    context['postprocessing'] = postprocessing
     #except Problem.DoesNotExist:
         #raise Http404("Problem does not exist")
     return render(request, 'questions/show_problem.html', context)
